@@ -6,8 +6,6 @@ PDL-DSP-Windows wishlist:
      barcilon-tems
      ultra spherical windows
 
-  * scalloping loss function is not working properly.
-
   * Other analysis functions could be added. There are, for
   instance, matlab scripts with these things implemented.
 

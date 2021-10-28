@@ -856,15 +856,17 @@ sub process_gain { 1 / shift->enbw }
 
 =for ref
 
-**BROKEN**.
 Compute and return the scalloping loss of the window.
 
 =cut
 
 sub scallop_loss {
-    my ($w) = @_;
-    my $x = PDL::Basic::sequence($w) * ( PI / $w->nelem );
-    sqrt( ( $w * cos($x) )->sum ** 2 + ( $w * sin($x) )->sum ** 2 ) / $w->sum;
+    my $w = shift->samples;
+
+    # Adapted from https://stackoverflow.com/a/40912607
+    my $num = abs( ( $w * exp( -( ( PDL::Core::pdl("1i") * PDL::sequence($w) * PI ) / $w->nelem ) ) )->sum );
+
+    20 * PDL::Ops::log10( $num / abs($w)->sum );
 }
 
 =head1 WINDOW FUNCTIONS

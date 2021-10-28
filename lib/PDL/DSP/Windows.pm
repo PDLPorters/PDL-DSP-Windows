@@ -130,20 +130,20 @@ my %window_aliases = (
 );
 
 my %window_parameters = (
-    blackman_gen  => [qw( $alpha              )],
-    blackman_gen3 => [qw( $a0 $a1 $a2         )],
-    blackman_gen4 => [qw( $a0 $a1 $a2 $a3     )],
-    blackman_gen5 => [qw( $a0 $a1 $a2 $a3 $a4 )],
-    cauchy        => [qw( $alpha              )],
-    chebyshev     => [qw( $at                 )],
-    cos_alpha     => [qw( $alpha              )],
-    dpss          => [qw( $beta               )],
-    gaussian      => [qw( $beta               )],
-    hamming_gen   => [qw( $a                  )],
-    hann_poisson  => [qw( $alpha              )],
-    kaiser        => [qw( $beta               )],
-    poisson       => [qw( $alpha              )],
-    tukey         => [qw( $alpha              )],
+    blackman_gen  => [ '$alpha' ],
+    blackman_gen3 => [ '$a0', '$a1', '$a2' ],
+    blackman_gen4 => [ '$a0', '$a1', '$a2', '$a3' ],
+    blackman_gen5 => [ '$a0', '$a1', '$a2', '$a3', '$a4' ],
+    cauchy        => [ '$alpha' ],
+    chebyshev     => [ '$at' ],
+    cos_alpha     => [ '$alpha' ],
+    dpss          => [ '$beta' ],
+    gaussian      => [ '$beta' ],
+    hamming_gen   => [ '$a' ],
+    hann_poisson  => [ '$alpha' ],
+    kaiser        => [ '$beta' ],
+    poisson       => [ '$alpha' ],
+    tukey         => [ '$alpha' ],
 );
 
 my %window_names = (
@@ -335,9 +335,10 @@ sub list_windows {
                 next;
             }
 
-            push @match,
-                map "$name (alias $_)",
-                grep /$expr/i, @{ $window_aliases{$name} // [] };
+            for my $alias ( grep /$expr/i, @{ $window_aliases{$name} // [] } ) {
+                push @match, "$name (alias $alias)";
+                next;
+            }
         }
     }
     else {
@@ -547,13 +548,21 @@ For example:
 =cut
 
 sub get {
-    my ( $self, @res ) = shift;
+    my $self = shift;
+    my @res;
 
-    push @res, /^(?:samples|modfreqs)$/
-        ? $self->${ \"get_$_" } : $self->{$_} for @_;
+    for (@_) {
+        if ($_ eq 'samples') {
+            push @res, $self->get_samples;
+        }
+        elsif ($_ eq 'modfreqs') {
+            push @res, $self->get_modfreqs;
+        }
+        else {
+            push @res, $self->{$_};
+        }
+    };
 
-    # We execute all arguments, because
-    # get_samples and get_modfreqs have side-effects
     return wantarray ? @res : $res[0];
 }
 
@@ -571,7 +580,11 @@ not yet been generated.
 
 =cut
 
-sub get_samples { $_[0]->{samples} // $_[0]->samples }
+sub get_samples {
+    my $self = shift;
+    return $self->{samples} if defined $self->{samples};
+    return $self->samples;
+}
 
 =head2 get_modfreqs
 
@@ -605,7 +618,9 @@ to 1000.
 
 sub get_modfreqs {
     my $self = shift;
-    @_ ? $self->modfreqs(@_) : $self->{modfreqs} // $self->modfreqs;
+    return $self->modfreqs(@_) if @_;
+    return $self->{modfreqs} if defined $self->{modfreqs};
+    return $self->modfreqs;
 }
 
 =head2 get_params
@@ -643,34 +658,44 @@ function. This is static data and does not depend on the instance.
 sub get_name {
     my $self = shift;
 
-    my $name = $window_print_names{ $self->{name} }
-        //           $window_names{ $self->{name} }
-        //                  ucfirst $self->{name};
+    if ( my $name = $window_print_names{ $self->{name} } ) {
+        return "$name window";
+    }
 
-    $name =~ /^\*/ ? $name : "$name window";
+    if ( my $name = $window_names{ $self->{name} } ) {
+        return "$name window" unless $name =~ /^\*/;
+        return $name;
+    }
+
+    return ucfirst $self->{name} . ' window';
 }
 
 sub get_param_names {
-    my $params = $window_parameters{ shift->{name} };
-    $params ? [ @$params ] : undef;
+    my $self = shift;
+    my $params = $window_parameters{ $self->{name} };
+    return undef unless $params;
+    return [ @{$params} ];
 }
 
 sub format_param_vals {
     my $self = shift;
 
-    my @params = @{ $self->{params}        || [] } or return '';
-    my @names  = @{ $self->get_param_names || [] } or return '';
+    my @params = @{ $self->{params} || [] };
+    return '' unless @params;
+
+    my @names = @{ $self->get_param_names || [] };
+    return '' unless @names;
 
     join ', ', map {
         my $name = $names[$_];
         $name =~ s/^\$//;
-        "$name = $params[$_]"
+        join' = ', $name, $params[$_];
     } 0 .. $#params;
 }
 
 sub format_plot_param_vals {
     my $ps = shift->format_param_vals;
-    $ps ? ": $ps" : $ps;
+    return $ps ? ": $ps" : $ps;
 }
 
 =head2 plot
@@ -687,8 +712,8 @@ default display type is used.
 =cut
 
 sub plot {
-    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless HAVE_GNUPLOT;
     my $self = shift;
+    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless HAVE_GNUPLOT;
 
     PDL::Graphics::Gnuplot::plot(
         title  => $self->get_name . $self->format_plot_param_vals,
@@ -741,9 +766,9 @@ Defaults to 1000.
 =cut
 
 sub plot_freq {
-    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless HAVE_GNUPLOT;
-
     my $self = shift;
+
+    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless HAVE_GNUPLOT;
 
     my $opts = new PDL::Options({
         coord    => 'nyquist',
@@ -756,23 +781,24 @@ sub plot_freq {
     my $title = $self->get_name . $self->format_plot_param_vals
         . ', frequency response. ENBW=' . sprintf( '%2.3f', $self->enbw );
 
+    my $coord = $opts->{coord};
+
     my ( $coordinate_range, $xlab );
-    for ( $opts->{coord} ) {
-        if ($_ eq 'nyquist') {
-            $coordinate_range = 1;
-            $xlab = 'Fraction of Nyquist frequency';
-        }
-        elsif ($_ eq 'sample') {
-            $coordinate_range = 0.5;
-            $xlab = 'Fraction of sampling frequency';
-        }
-        elsif ($_ eq 'bin') {
-            $coordinate_range = $self->{N} / 2;
-            $xlab = 'bin';
-        }
-        else {
-            PDL::Core::barf "plot_freq: Unknown ordinate unit specification $_";
-        }
+
+    if ($coord eq 'nyquist') {
+        $coordinate_range = 1;
+        $xlab = 'Fraction of Nyquist frequency';
+    }
+    elsif ($coord eq 'sample') {
+        $coordinate_range = 0.5;
+        $xlab = 'Fraction of sampling frequency';
+    }
+    elsif ($coord eq 'bin') {
+        $coordinate_range = $self->{N} / 2;
+        $xlab = 'bin';
+    }
+    else {
+        PDL::Core::barf "plot_freq: Unknown ordinate unit specification $coord";
     }
 
     my $ylab = 'frequency response (dB)';
@@ -1157,10 +1183,9 @@ sub cosine_per {
 
 sub dpss {
     PDL::Core::barf 'dpss: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
-    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless HAVE_LinearAlgebra;
-
     my ( $N, $beta ) = @_;
 
+    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless HAVE_LinearAlgebra;
     PDL::Core::barf "dpss: $beta not between 0 and $N." unless $beta >= 0 and $beta <= $N;
 
     $beta /= $N / 2;
@@ -1178,11 +1203,10 @@ sub dpss {
 
 sub dpss_per {
     PDL::Core::barf 'dpss: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
-    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless HAVE_LinearAlgebra;
-
     my ( $N, $beta ) = @_;
     $N++;
 
+    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless HAVE_LinearAlgebra;
     PDL::Core::barf "dpss: $beta not between 0 and $N." unless $beta >= 0 and $beta <= $N;
 
     $beta /= $N / 2;
@@ -1307,9 +1331,10 @@ sub hann_poisson_per {
 
 sub kaiser {
     PDL::Core::barf 'kaiser: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
+    my ( $N, $beta ) = @_;
+
     PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless HAVE_BESSEL;
 
-    my ( $N, $beta ) = @_;
     $beta *= PI;
 
     my ($n) = PDL::GSLSF::BESSEL::gsl_sf_bessel_In(
@@ -1322,9 +1347,10 @@ sub kaiser {
 
 sub kaiser_per {
     PDL::Core::barf 'kaiser: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
+    my ($N,$beta) = @_;
+
     PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless HAVE_BESSEL;
 
-    my ($N,$beta) = @_;
     $beta *= PI;
 
     my ($n) = PDL::GSLSF::BESSEL::gsl_sf_bessel_In(
@@ -1456,12 +1482,14 @@ sub poisson_per {
 
 sub rectangular {
     PDL::Core::barf 'rectangular: 1 argument expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 1;
-    PDL::Core::ones($_[0]);
+    my ($N) = @_;
+    PDL::Core::ones($N);
 }
 
 sub rectangular_per {
     PDL::Core::barf 'rectangular: 1 argument expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 1;
-    PDL::Core::ones($_[0]);
+    my ($N) = @_;
+    PDL::Core::ones($N);
 }
 
 sub triangular {
@@ -1943,7 +1971,7 @@ sub cos_pow_to_mult {
 
     my $sign = -1;
 
-    for (@as) {
+    foreach (@as) {
         $_ /= -$sign * 32;
         $sign *= -1;
     }

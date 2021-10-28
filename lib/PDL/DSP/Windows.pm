@@ -191,14 +191,19 @@ PDL::DSP::Windows - Window functions for signal processing
 =head1 SYNOPSIS
 
     use PDL;
-    use PDL::DSP::Windows('window');
-    my $samples = window( 10, 'tukey', { params => .5 });
+    use PDL::DSP::Windows 'window';
 
-    use PDL;
-    use PDL::DSP::Windows;
-    my $win = PDL::DSP::Windows->new( 10, 'tukey', { params => .5 });
-    print $win->coherent_gain, "\n";
-    $win->plot;
+    my $window;
+
+    # Create a window with the helper
+    $window = window( 10, 'tukey', { params => .5 });
+
+    # Or with the OO constructor, which is the same
+    $window = PDL::DSP::Windows->new( 10, 'tukey', { params => .5 });
+
+    print $window->coherent_gain, "\n";
+
+    $window->plot; # Requires PDL::Graphics::Gnuplot
 
 =head1 DESCRIPTION
 

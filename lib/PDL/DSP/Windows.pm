@@ -5,6 +5,7 @@ our $VERSION = '0.008005';
 use strict;
 use warnings;
 
+use PDL::Bad ();
 use PDL::Basic ();
 use PDL::Core ();
 use PDL::FFT ();

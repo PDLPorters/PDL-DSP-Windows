@@ -6,11 +6,8 @@ use warnings;
 use PDL;
 use PDL::DSP::Windows qw( window chebpoly ) ;
 
-eval { require PDL::LinearAlgebra::Special };
-my $HAVE_LinearAlgebra = 1 if !$@;
-
-eval { require PDL::GSLSF::BESSEL; };
-my $HAVE_BESSEL = 1 if !$@;
+my $HAVE_LinearAlgebra = eval { require PDL::LinearAlgebra::Special };
+my $HAVE_BESSEL        = eval { require PDL::GSLSF::BESSEL };
 
 use lib 't/lib';
 use MyTest::Helper qw( dies is_approx );

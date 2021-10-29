@@ -341,9 +341,9 @@ sub list_windows {
                 next;
             }
 
-            for my $alias ( grep /$expr/i, @{ $window_aliases{$name} // [] } ) {
-                push @match, "$name (alias $alias)";
-            }
+            push @match,
+                map "$name (alias $_)",
+                grep /$expr/i, @{ $window_aliases{$name} // [] };
         }
     }
     else {

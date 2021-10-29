@@ -2,6 +2,9 @@ Revision history for PDL-DSP-Windows
 
 {{$NEXT}}
 
+Fixes:
+  * Fixed scallop_loss tests in older versions of PDL
+
 0.008004  2021-10-28 23:19:18 BST (TRIAL RELEASE)
 
 Fixes:

@@ -21,6 +21,10 @@ use constant {
     HAVE_BESSEL        => eval { require PDL::GSLSF::BESSEL }          || 0,
     HAVE_GNUPLOT       => eval { require PDL::Graphics::Gnuplot }      || 0,
     USE_FFTW_DIRECTION => version->parse($PDL::VERSION) <= v2.007,
+    I => version->parse($PDL::VERSION) > v2.054 ? PDL::Core::pdl('i') : do {
+        require PDL::Complex; # Deprecated in 2.055
+        PDL::Complex::i();
+    },
 };
 
 # These constants are left in our namespace for historical reasons
@@ -890,9 +894,9 @@ sub scallop_loss {
     my $w = shift->samples;
 
     # Adapted from https://stackoverflow.com/a/40912607
-    my $num = abs( ( $w * exp( -( ( PDL::Core::pdl("1i") * PDL::sequence($w) * PI ) / $w->nelem ) ) )->sum );
+    my $num = $w * exp( -( I()->im * PDL::sequence($w) * PI / $w->nelem ) );
 
-    20 * PDL::Ops::log10( $num / abs($w)->sum );
+    20 * PDL::Ops::log10( abs( $num->sum ) / abs($w)->sum );
 }
 
 =head1 WINDOW FUNCTIONS
@@ -2050,6 +2054,7 @@ delete @PDL::DSP::Windows::{qw(
     HAVE_BESSEL
     HAVE_GNUPLOT
     USE_FFTW_DIRECTION
+    I
 )};
 
 1;

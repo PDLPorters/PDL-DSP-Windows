@@ -364,9 +364,9 @@ sub list_windows {
 
 =for ref
 
-Create an instance of a Windows object. If C<ARGS> are given, the instance
+Create an instance of a window object. If C<ARGS> are given, the instance
 is initialized. C<ARGS> are interpreted in exactly the same way as arguments
-the subroutine L</window>.
+for the L</window> subroutine.
 
 =for example
 
@@ -392,8 +392,8 @@ sub new {
 
 =for ref
 
-Initialize (or reinitialize) a Windows object. C<ARGS> are interpreted in
-exactly the same way as arguments the subroutine L</window>.
+Initialize (or reinitialize) a window object. C<ARGS> are interpreted in
+exactly the same way as arguments for the L</window> subroutine.
 
 =for example
 

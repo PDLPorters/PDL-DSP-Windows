@@ -7,14 +7,16 @@ PDL::DSP::Windows - Window functions for signal processing
     use PDL;
     use PDL::DSP::Windows 'window';
 
-    my $window;
+    # Get a piddle with a window's samples with the helper
+    my $samples = window( 10, tukey => { params => .5 });
 
-    # Create a window with the helper
-    $window = window( 10, 'tukey', { params => .5 });
+    # Or construct a window object with the same parameters
+    my $window = PDL::DSP::Windows->new( 10, tukey => { params => .5 });
 
-    # Or with the OO constructor, which is the same
-    $window = PDL::DSP::Windows->new( 10, 'tukey', { params => .5 });
+    # These two are equivalent
+    $samples = $window->samples;
 
+    # The window object gives access to additional methods
     print $window->coherent_gain, "\n";
 
     $window->plot; # Requires PDL::Graphics::Gnuplot
@@ -134,9 +136,9 @@ are case-insensitive.
 
     my $win = PDL::DSP::Windows->new(ARGS);
 
-Create an instance of a Windows object. If `ARGS` are given, the instance
+Create an instance of a window object. If `ARGS` are given, the instance
 is initialized. `ARGS` are interpreted in exactly the same way as arguments
-the subroutine ["window"](#window).
+for the ["window"](#window) subroutine.
 
 For example:
 
@@ -147,8 +149,8 @@ For example:
 
     $win->init(ARGS);
 
-Initialize (or reinitialize) a Windows object. `ARGS` are interpreted in
-exactly the same way as arguments the subroutine ["window"](#window).
+Initialize (or reinitialize) a window object. `ARGS` are interpreted in
+exactly the same way as arguments for the ["window"](#window) subroutine.
 
 For example:
 

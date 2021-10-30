@@ -2,6 +2,8 @@ Revision history for PDL-DSP-Windows
 
 {{$NEXT}}
 
+0.008006  2021-10-30 15:32:56 BST (TRIAL RELEASE)
+
 Changes:
   * Plot tests now use the 'svg' gnuplot device, and are skipped in
     environments that do not support it.

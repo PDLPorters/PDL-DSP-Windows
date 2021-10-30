@@ -325,8 +325,8 @@ The term 'Blackman-Harris family' is meant to include the Hamming family and
 the Blackman family. These are functions of sums of cosines.
 
 Unless otherwise noted, the arguments in the cosines of all symmetric window
-functions are multiples of `$N` numbers uniformly spaced from `0` through
-`2 pi`.
+functions are multiples of `$N` numbers uniformly spaced from 0 through
+2π.
 
 # Symmetric window functions
 

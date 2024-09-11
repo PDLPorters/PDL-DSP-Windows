@@ -43,13 +43,12 @@ subtest 'Empty constructor' => sub {
     };
 
     try {
-        # TODO: Should this die earlier?
-        PDL::DSP::Windows->new->init->samples;
+        PDL::DSP::Windows->new->init;
         fail 'Did not die';
     }
     catch {
-        like $_, qr/at least two elements in dimension for xlinvals/,
-            'Calling ->samples on incomplete window dies';
+        like $_, qr/undefined value/,
+            "Can't construct incomplete window";
     };
 };
 

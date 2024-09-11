@@ -33,7 +33,6 @@ subtest 'Empty constructor' => sub {
         'Constructor called from instance creates new instance';
 
     try {
-        # TODO: Should this die earlier?
         PDL::DSP::Windows->new->samples;
         fail 'Did not die';
     }
@@ -49,6 +48,14 @@ subtest 'Empty constructor' => sub {
     catch {
         like $_, qr/undefined value/,
             "Can't construct incomplete window";
+    };
+    try {
+        PDL::DSP::Windows->new->init(0);
+        fail 'Did not die';
+    }
+    catch {
+        like $_, qr/zero/,
+            "Can't construct 0-sized window";
     };
 };
 

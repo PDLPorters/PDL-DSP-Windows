@@ -115,7 +115,7 @@ are case-insensitive.
 - **N**
 
     number of points in window function (the same as the order of the filter).
-    As of 0.102, throws exception if the value for `N` is undefined.
+    As of 0.102, throws exception if the value for `N` is undefined or zero.
 
 - **periodic**
 
@@ -151,7 +151,7 @@ For example:
 
 Initialize (or reinitialize) a window object. `ARGS` are interpreted in
 exactly the same way as arguments for the ["window"](#window) subroutine.
-As of 0.102, throws exception if the value for `N` is undefined.
+As of 0.102, throws exception if the value for `N` is undefined or zero.
 
 For example:
 

@@ -308,7 +308,7 @@ number. For example C<3> or C<[3]>.
 =item B<N>
 
 number of points in window function (the same as the order of the filter).
-As of 0.102, throws exception if the value for C<N> is undefined.
+As of 0.102, throws exception if the value for C<N> is undefined or zero.
 
 =item B<periodic>
 
@@ -394,7 +394,7 @@ sub new {
 
 Initialize (or reinitialize) a window object. C<ARGS> are interpreted in
 exactly the same way as arguments for the L</window> subroutine.
-As of 0.102, throws exception if the value for C<N> is undefined.
+As of 0.102, throws exception if the value for C<N> is undefined or zero.
 
 =for example
 
@@ -423,7 +423,7 @@ sub init {
     })->options( shift // {} );
 
     $name     ||= $opts->{name};
-    $N        ||= $opts->{N};
+    $N        //= $opts->{N};
     $periodic ||= $opts->{periodic};
     $params   //= $opts->{params};
     $params   = [$params] if defined $params && !ref $params;
@@ -438,6 +438,7 @@ sub init {
 
     $self->{name}     = $name;
     $self->{N}        = $N // die "Can't continue with undefined value for N";
+    die "Can't continue with zero value for N" if !$self->{N};
     $self->{periodic} = $periodic;
     $self->{params}   = $params;
     $self->{code}     = __PACKAGE__->can( $name . ( $periodic ? '_per' : '' ) );

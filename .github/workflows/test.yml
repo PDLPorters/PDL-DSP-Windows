@@ -9,6 +9,15 @@ on:
       - master
 
 jobs:
+  notify:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    if: ${{ always() }}
+    steps:
+      - uses: PDLPorters/devops/github-actions/irc-notifications@master
+        with:
+          target-notifications: true
+
   build:
     strategy:
       fail-fast: false
@@ -93,3 +102,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: cover -report Coveralls -test
+
+  build-status:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    if: ${{ always() }}
+    needs: [ 'build' ]
+    steps:
+      - uses: PDLPorters/devops/github-actions/irc-notifications@master
+        with:
+          target-build-status: true
+          needs: ${{ toJSON(needs) }}

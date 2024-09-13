@@ -101,12 +101,12 @@
    "resources" : {
       "bugtracker" : {
          "mailto" : "jjatria at cpan.org",
-         "web" : "https://github.com/jjatria/PDL-DSP-Windows/issues"
+         "web" : "https://github.com/PDLPorters/PDL-DSP-Windows/issues"
       },
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/jjatria/PDL-DSP-Windows.git",
-         "web" : "https://github.com/jjatria/PDL-DSP-Windows"
+         "url" : "git://github.com/PDLPorters/PDL-DSP-Windows.git",
+         "web" : "https://github.com/PDLPorters/PDL-DSP-Windows"
       }
    },
    "version" : "0.101",

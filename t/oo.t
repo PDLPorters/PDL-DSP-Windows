@@ -142,7 +142,7 @@ subtest 'Samples accesors' => sub {
         '->samples redefines value';
 
     is ref $window->get_samples, 'PDL',
-        '->get_samples does not die if samples is already a piddle';
+        '->get_samples does not die if samples is already an ndarray';
 };
 
 subtest 'Modfreqs accesors' => sub {
@@ -185,7 +185,7 @@ subtest 'Modfreqs accesors' => sub {
     }
 
     is ref $window->get_modfreqs, 'PDL',
-        '->get_modfreqs does not die if modfreqs is already a piddle';
+        '->get_modfreqs does not die if modfreqs is already an ndarray';
 
     {
         $window->{modfreqs} = [];

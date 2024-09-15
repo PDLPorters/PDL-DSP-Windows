@@ -16,7 +16,7 @@ use MyTest::Helper qw( dies is_approx );
 subtest 'chebpoly.' => sub {
     is_approx chebpoly( 3, pdl( [ 0.5, 1, 1.2 ] ) ),
         [ -1, 1, 3.312 ],
-        'chebpoly takes piddle';
+        'chebpoly takes ndarray';
 
     is_approx chebpoly( 3, [ 0.5, 1, 1.2 ] ),
         [ -1, 1, 3.312 ],

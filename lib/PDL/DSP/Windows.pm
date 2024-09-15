@@ -194,7 +194,7 @@ PDL::DSP::Windows - Window functions for signal processing
     use PDL;
     use PDL::DSP::Windows 'window';
 
-    # Get a piddle with a window's samples with the helper
+    # Get an ndarray with a window's samples with the helper
     my $samples = window( 10, tukey => { params => .5 });
 
     # Or construct a window object with the same parameters
@@ -452,7 +452,7 @@ sub init {
 
 =for ref
 
-Generate and return a reference to the piddle of C<$N> samples for the window
+Generate and return a reference to the ndarray of C<$N> samples for the window
 C<$win>. This is the real-space representation of the window.
 
 The samples are stored in the object C<$win>, but are regenerated every time
@@ -481,7 +481,7 @@ sub samples {
 
 =for ref
 
-Generate and return a reference to the piddle of the modulus of the fourier
+Generate and return a reference to the ndarray of the modulus of the fourier
 transform of the samples for the window C<$win>.
 
 These values are stored in the object C<$win>, but are regenerated every time
@@ -494,7 +494,7 @@ C<modfreqs> is invoked. See the method L</get_modfreqs> below.
 =item min_bins => MIN
 
 This sets the minimum number of frequency bins. Defaults to 1000. If necessary,
-the piddle of window samples are padded with zeroes before the fourier transform
+the ndarray of window samples are padded with zeroes before the fourier transform
 is performed.
 
 =back

@@ -21,10 +21,7 @@ use constant {
     HAVE_LinearAlgebra => eval { require PDL::LinearAlgebra::Special } || 0,
     HAVE_BESSEL        => eval { require PDL::GSLSF::BESSEL }          || 0,
     HAVE_GNUPLOT       => eval { require PDL::Graphics::Gnuplot }      || 0,
-    I => version->parse($PDL::VERSION) > v2.054 ? PDL::Core::pdl('i') : do {
-        require PDL::Complex; # Deprecated in 2.055
-        PDL::Complex::i();
-    },
+    I => PDL::Core::pdl('i'),
 };
 
 # These constants are left in our namespace for historical reasons

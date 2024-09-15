@@ -438,7 +438,8 @@ Blackman-Harris family, with coefficients
 
     a0 = 0.35875
     a1 = 0.48829
-    a2 = 0.14128a3 = 0.01168
+    a2 = 0.14128
+    a3 = 0.01168
 
 Another name for this window is the Blackman-Harris window.
 

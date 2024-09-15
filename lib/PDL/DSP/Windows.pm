@@ -8,7 +8,6 @@ use warnings;
 use PDL::Bad ();
 use PDL::Basic ();
 use PDL::Core ();
-use PDL::FFT ();
 use PDL::Math ();
 use PDL::MatrixOps ();
 use PDL::Ops ();
@@ -18,9 +17,6 @@ use PDL::Ufunc ();
 
 # These constants are deleted at the end of this package
 use constant {
-    HAVE_LinearAlgebra => eval { require PDL::LinearAlgebra::Special } || 0,
-    HAVE_BESSEL        => eval { require PDL::GSLSF::BESSEL }          || 0,
-    HAVE_GNUPLOT       => eval { require PDL::Graphics::Gnuplot }      || 0,
     I => PDL::Core::pdl('i'),
 };
 
@@ -496,6 +492,7 @@ is performed.
 =cut
 
 sub modfreqs {
+    require PDL::FFT;
     my $self = shift;
     my %opts = PDL::Options::iparse( { min_bins => 1000 }, PDL::Options::ifhref(shift) );
 
@@ -711,7 +708,7 @@ default display type is used.
 
 sub plot {
     my $self = shift;
-    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless HAVE_GNUPLOT;
+    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless eval { require PDL::Graphics::Gnuplot };
 
     PDL::Graphics::Gnuplot::plot(
         title  => $self->get_name . $self->format_plot_param_vals,
@@ -766,7 +763,7 @@ Defaults to 1000.
 sub plot_freq {
     my $self = shift;
 
-    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless HAVE_GNUPLOT;
+    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless eval { require PDL::Graphics::Gnuplot };
 
     my $opts = new PDL::Options({
         coord    => 'nyquist',
@@ -1108,6 +1105,7 @@ sub cauchy_per {
 }
 
 sub chebyshev {
+    require PDL::FFT;
     PDL::Core::barf 'chebyshev: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ( $N, $at ) = @_;
 
@@ -1178,7 +1176,7 @@ sub dpss {
     PDL::Core::barf 'dpss: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ( $N, $beta ) = @_;
 
-    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless HAVE_LinearAlgebra;
+    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless eval { require PDL::LinearAlgebra::Special };
     PDL::Core::barf "dpss: $beta not between 0 and $N." unless $beta >= 0 and $beta <= $N;
 
     $beta /= $N / 2;
@@ -1199,7 +1197,7 @@ sub dpss_per {
     my ( $N, $beta ) = @_;
     $N++;
 
-    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless HAVE_LinearAlgebra;
+    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless eval { require PDL::LinearAlgebra::Special };
     PDL::Core::barf "dpss: $beta not between 0 and $N." unless $beta >= 0 and $beta <= $N;
 
     $beta /= $N / 2;
@@ -1326,7 +1324,7 @@ sub kaiser {
     PDL::Core::barf 'kaiser: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ( $N, $beta ) = @_;
 
-    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless HAVE_BESSEL;
+    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless eval { require PDL::GSLSF::BESSEL };
 
     $beta *= PI;
 
@@ -1342,7 +1340,7 @@ sub kaiser_per {
     PDL::Core::barf 'kaiser: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ($N,$beta) = @_;
 
-    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless HAVE_BESSEL;
+    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless eval { require PDL::GSLSF::BESSEL };
 
     $beta *= PI;
 
@@ -1659,7 +1657,8 @@ Blackman-Harris family, with coefficients
 
     a0 = 0.35875
     a1 = 0.48829
-    a2 = 0.14128a3 = 0.01168
+    a2 = 0.14128
+    a3 = 0.01168
 
 Another name for this window is the Blackman-Harris window.
 
@@ -2039,9 +2038,6 @@ sub cos_mult_to_pow {
 
 # Delete internal constants from namespace
 delete @PDL::DSP::Windows::{qw(
-    HAVE_LinearAlgebra
-    HAVE_BESSEL
-    HAVE_GNUPLOT
     I
 )};
 

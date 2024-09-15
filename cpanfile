@@ -1,4 +1,4 @@
-requires 'PDL' => 0;
+requires 'PDL' => '2.008';
 
 feature dpss => 'Support for DPSS windows' => sub {
     recommends 'PDL::LinearAlgebra::Special';

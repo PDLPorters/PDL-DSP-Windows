@@ -21,7 +21,6 @@ use constant {
     HAVE_LinearAlgebra => eval { require PDL::LinearAlgebra::Special } || 0,
     HAVE_BESSEL        => eval { require PDL::GSLSF::BESSEL }          || 0,
     HAVE_GNUPLOT       => eval { require PDL::Graphics::Gnuplot }      || 0,
-    USE_FFTW_DIRECTION => version->parse($PDL::VERSION) <= v2.007,
     I => version->parse($PDL::VERSION) > v2.054 ? PDL::Core::pdl('i') : do {
         require PDL::Complex; # Deprecated in 2.055
         PDL::Complex::i();
@@ -1141,12 +1140,7 @@ sub chebyshev {
         my $cw_im = $cw * sin($arg);
         $cw *= cos($arg);
 
-        if (USE_FFTW_DIRECTION) {
-            PDL::FFT::fftnd( $cw, $cw_im );
-        }
-        else {
-            PDL::FFT::ifftnd( $cw, $cw_im );
-        }
+        PDL::FFT::ifftnd( $cw, $cw_im );
 
         $M1   = $N / 2;
         $M    = $M1 - 1;
@@ -2057,7 +2051,6 @@ delete @PDL::DSP::Windows::{qw(
     HAVE_LinearAlgebra
     HAVE_BESSEL
     HAVE_GNUPLOT
-    USE_FFTW_DIRECTION
     I
 )};
 

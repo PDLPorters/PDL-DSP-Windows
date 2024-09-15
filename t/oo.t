@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use PDL::DSP::Windows;
-use Try::Tiny;
 
 use lib 't/lib';
 use MyTest::Helper qw( dies );
@@ -32,31 +31,13 @@ subtest 'Empty constructor' => sub {
     is +PDL::DSP::Windows->new(100)->new(10)->samples->nelem, 10,
         'Constructor called from instance creates new instance';
 
-    try {
-        PDL::DSP::Windows->new->samples;
-        fail 'Did not die';
-    }
-    catch {
-        like $_, qr/(?:undefined value|string .*) as a subroutine ref(?:erence)?/,
+    dies { PDL::DSP::Windows->new->samples }
+        qr/(?:undefined value|string .*) as a subroutine ref(?:erence)?/,
             'Calling ->samples on uninitialised window dies';
-    };
-
-    try {
-        PDL::DSP::Windows->new->init;
-        fail 'Did not die';
-    }
-    catch {
-        like $_, qr/undefined value/,
+    dies { PDL::DSP::Windows->new->init } qr/undefined value/,
             "Can't construct incomplete window";
-    };
-    try {
-        PDL::DSP::Windows->new->init(0);
-        fail 'Did not die';
-    }
-    catch {
-        like $_, qr/zero/,
+    dies { PDL::DSP::Windows->new->init(0) } qr/zero/,
             "Can't construct 0-sized window";
-    };
 };
 
 subtest 'Simple accessors' => sub {

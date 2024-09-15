@@ -13,7 +13,6 @@ feature plot => 'Plot windows' => sub {
 };
 
 on test => sub {
-    requires 'Try::Tiny'     => '0';
     requires 'Capture::Tiny' => '0';
     requires 'Test::More'    => '0.96';
 };

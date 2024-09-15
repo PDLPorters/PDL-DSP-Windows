@@ -87,12 +87,6 @@ jobs:
       - if: ${{ matrix.kaiser }}
         run: cpanm -n PDL::GSLSF::BESSEL
 
-      - if: ${{ matrix.plot }}
-        uses: PDLPorters/devops/github-actions/install-dep-gnuplot@master
-
-      - if: ${{ matrix.plot }}
-        run: cpanm -n PDL::Graphics::Gnuplot
-
       - run: perl Makefile.PL
 
       - if: ${{ !matrix.cover }}

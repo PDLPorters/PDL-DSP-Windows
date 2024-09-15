@@ -9,8 +9,8 @@ use lib 't/lib';
 use MyTest::Helper qw( dies );
 
 my %captured;
-*PDL::Graphics::Gnuplot::plot = sub { %captured = grep !ref, @_ };
-$INC{'PDL/Graphics/Gnuplot.pm'} = 1;
+*PDL::Graphics::Simple::plot = sub { %captured = %{(grep ref() eq 'HASH', @_)[0]} };
+$INC{'PDL/Graphics/Simple.pm'} = 1;
 sub do_test {
     my ( $method, $win, $args, $checks ) = @_;
     %captured = ();

@@ -1,6 +1,7 @@
 {{$NEXT}}
 
 - list_windows now returns a list, not print to selected filehandle
+- use PDL::Graphics::Simple for plotting
 
 0.101     2024-09-11 20:13:59 BST
 

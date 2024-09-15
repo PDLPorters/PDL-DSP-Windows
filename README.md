@@ -19,7 +19,7 @@ PDL::DSP::Windows - Window functions for signal processing
     # The window object gives access to additional methods
     print $window->coherent_gain, "\n";
 
-    $window->plot; # Requires PDL::Graphics::Gnuplot
+    $window->plot; # Requires PDL::Graphics::Simple
 
 # DESCRIPTION
 
@@ -253,7 +253,7 @@ function. This is static data and does not depend on the instance.
 
     $win->plot;
 
-Plot the samples. Currently, only [PDL::Graphics::Gnuplot](https://metacpan.org/pod/PDL%3A%3AGraphics%3A%3AGnuplot) is supported. The
+Plot the samples. Uses [PDL::Graphics::Simple](https://metacpan.org/pod/PDL%3A%3AGraphics%3A%3ASimple). The
 default display type is used.
 
 ## plot\_freq
@@ -268,7 +268,7 @@ Or this
 
 Plot the frequency response (magnitude of the DFT of the window samples).
 The response is plotted in dB, and the frequency (by default) as a fraction of
-the Nyquist frequency. Currently, only [PDL::Graphics::Gnuplot](https://metacpan.org/pod/PDL%3A%3AGraphics%3A%3AGnuplot) is supported.
+the Nyquist frequency. Uses [PDL::Graphics::Simple](https://metacpan.org/pod/PDL%3A%3AGraphics%3A%3ASimple).
 The default display type is used.
 
 ### options

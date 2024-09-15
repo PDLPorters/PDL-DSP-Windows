@@ -202,7 +202,7 @@ PDL::DSP::Windows - Window functions for signal processing
     # The window object gives access to additional methods
     print $window->coherent_gain, "\n";
 
-    $window->plot; # Requires PDL::Graphics::Gnuplot
+    $window->plot; # Requires PDL::Graphics::Simple
 
 =head1 DESCRIPTION
 
@@ -701,19 +701,20 @@ sub format_plot_param_vals {
 
 =for ref
 
-Plot the samples. Currently, only L<PDL::Graphics::Gnuplot> is supported. The
+Plot the samples. Uses L<PDL::Graphics::Simple>. The
 default display type is used.
 
 =cut
 
 sub plot {
     my $self = shift;
-    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless eval { require PDL::Graphics::Gnuplot };
-    PDL::Graphics::Gnuplot::plot(
-        title  => $self->get_name . $self->format_plot_param_vals,
-        xlabel => 'Time (samples)',
-        ylabel => 'amplitude',
+    PDL::Core::barf 'PDL::DSP::Windows::plot PDL::Graphics::Simple not available!' unless eval { require PDL::Graphics::Simple };
+    PDL::Graphics::Simple::plot(
+        with => 'lines',
         $self->get_samples,
+        { title  => $self->get_name . $self->format_plot_param_vals,
+          xlabel => 'Time (samples)',
+          ylabel => 'amplitude' },
     );
     return $self;
 }
@@ -734,7 +735,7 @@ Or this
 
 Plot the frequency response (magnitude of the DFT of the window samples).
 The response is plotted in dB, and the frequency (by default) as a fraction of
-the Nyquist frequency. Currently, only L<PDL::Graphics::Gnuplot> is supported.
+the Nyquist frequency. Uses L<PDL::Graphics::Simple>.
 The default display type is used.
 
 =head3 options
@@ -765,7 +766,7 @@ my %coord2xlab = (
 );
 sub plot_freq {
     my $self = shift;
-    PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless eval { require PDL::Graphics::Gnuplot };
+    PDL::Core::barf 'PDL::DSP::Windows::plot PDL::Graphics::Simple not available!' unless eval { require PDL::Graphics::Simple };
     my $opts = new PDL::Options({
         coord    => 'nyquist',
         min_bins => 1000
@@ -783,15 +784,14 @@ sub plot_freq {
       $self->{N} / 2;
     my $coordinates = PDL::Core::zeroes($mf)
         ->xlinvals( -$coordinate_range, $coordinate_range );
-    PDL::Graphics::Gnuplot::plot(
-        title  => $title,
-        xmin   => -$coordinate_range,
-        xmax   => $coordinate_range,
-        xlabel => $xlab,
-        ylabel => $ylab,
-        with => 'line',
+    PDL::Graphics::Simple::plot(
+        with => 'lines',
         $coordinates,
         20 * PDL::Ops::log10($mf),
+        { title  => $title,
+          xrange => [-$coordinate_range,$coordinate_range],
+          xlabel => $xlab,
+          ylabel => $ylab },
     );
     return $self;
 }

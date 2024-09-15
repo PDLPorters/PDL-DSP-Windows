@@ -9,7 +9,7 @@ feature kaiser => 'Support for kaiser windows' => sub {
 };
 
 feature plot => 'Plot windows' => sub {
-    recommends 'PDL::Graphics::Gnuplot';
+    recommends 'PDL::Graphics::Simple';
 };
 
 on test => sub {

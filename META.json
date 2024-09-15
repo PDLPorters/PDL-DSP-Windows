@@ -93,6 +93,10 @@
       "PDL::DSP::Windows" : {
          "file" : "lib/PDL/DSP/Windows.pm",
          "version" : "0.102"
+      },
+      "PDL::Demos::DSPWindows" : {
+         "file" : "lib/PDL/Demos/DSPWindows.pm",
+         "version" : "0.102"
       }
    },
    "release_status" : "stable",

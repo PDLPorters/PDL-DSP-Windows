@@ -885,7 +885,7 @@ sub scallop_loss {
     my $w = shift->samples;
 
     # Adapted from https://stackoverflow.com/a/40912607
-    my $num = $w * exp( -( I()->im * PDL::sequence($w) * PI / $w->nelem ) );
+    my $num = $w * exp( -( I() * PDL::sequence($w) * PI / $w->nelem ) );
 
     20 * PDL::Ops::log10( abs( $num->sum ) / abs($w)->sum );
 }

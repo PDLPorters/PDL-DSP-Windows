@@ -319,35 +319,29 @@ sub window { PDL::DSP::Windows->new(@_)->samples }
 
 =head2 list_windows
 
-    list_windows
-    list_windows STR
+    print join ", ", list_windows(), "\n"
+    print join ", ", list_windows(STR), "\n"
 
-C<list_windows> prints the names all of the available windows.
-C<list_windows STR> prints only the names of windows matching the string C<STR>.
+C<list_windows> returns the names all of the available windows.
+C<list_windows STR> returns only the names of windows matching the
+regular expression C<STR>.
 
 =cut
 
 sub list_windows {
     my ($expr) = @_;
-
+    return sort keys %symmetric_windows if !$expr;
     my @match;
-    if ($expr) {
-        for my $name ( sort keys %symmetric_windows ) {
-            if ( $name =~ /$expr/ ) {
-                push @match, $name;
-                next;
-            }
-
-            push @match,
-                map "$name (alias $_)",
-                grep /$expr/i, @{ $window_aliases{$name} // [] };
+    for my $name ( sort keys %symmetric_windows ) {
+        if ( $name =~ /$expr/ ) {
+            push @match, $name;
+            next;
         }
+        push @match,
+            map "$name (alias $_)",
+            grep /$expr/i, @{ $window_aliases{$name} // [] };
     }
-    else {
-        @match = sort keys %symmetric_windows;
-    }
-
-    print join( ', ', @match ), "\n";
+    @match;
 }
 
 =head1 METHODS

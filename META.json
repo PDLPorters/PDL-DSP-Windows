@@ -82,7 +82,6 @@
             "CPAN::Meta" : "2.120900"
          },
          "requires" : {
-            "Capture::Tiny" : "0",
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
             "Test::More" : "0.96",

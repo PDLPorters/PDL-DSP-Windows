@@ -20,7 +20,6 @@ my %WriteMakefileArgs = (
     "PDL" => "2.055"
   },
   "TEST_REQUIRES" => {
-    "Capture::Tiny" => 0,
     "ExtUtils::MakeMaker" => 0,
     "File::Spec" => 0,
     "Test::More" => "0.96"
@@ -33,7 +32,6 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "Capture::Tiny" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
   "PDL" => "2.055",

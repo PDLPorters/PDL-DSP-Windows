@@ -1,6 +1,6 @@
-Revision history for PDL-DSP-Windows
-
 {{$NEXT}}
+
+- list_windows now returns a list, not print to selected filehandle
 
 0.101     2024-09-11 20:13:59 BST
 

@@ -124,11 +124,12 @@ are case-insensitive.
 
 ## list\_windows
 
-    list_windows
-    list_windows STR
+    print join ", ", list_windows(), "\n"
+    print join ", ", list_windows(STR), "\n"
 
-`list_windows` prints the names all of the available windows.
-`list_windows STR` prints only the names of windows matching the string `STR`.
+`list_windows` returns the names all of the available windows.
+`list_windows STR` returns only the names of windows matching the
+regular expression `STR`.
 
 # METHODS
 

@@ -1943,12 +1943,9 @@ To the cofficients of this
 
 sub cos_pow_to_mult {
     my @cin = @_;
-    PDL::Core::barf 'cos_pow_to_mult: number of args not less than 8.' if @cin > 7;
-
+    PDL::Core::barf 'cos_pow_to_mult: must be less than 8 args .' if @cin > 7;
     my $ex = 7 - @cin;
-
     my @c = ( @cin, (0) x $ex );
-
     my @as = (
         10 * $c[6] + 12 * $c[4] + 16 * $c[2] + 32 * $c[0],
         20 * $c[5] + 24 * $c[3] + 32 * $c[1],
@@ -1958,16 +1955,12 @@ sub cos_pow_to_mult {
          2 * $c[5],
         $c[6],
     );
-
-    pop @as for 1 .. $ex;
-
+    splice @as, -$ex if $ex;
     my $sign = -1;
-
     foreach (@as) {
         $_ /= -$sign * 32;
         $sign *= -1;
     }
-
     @as;
 }
 
@@ -2015,13 +2008,10 @@ sub chebpoly {
 
 sub cos_mult_to_pow {
     my( @ain )  = @_;
-    PDL::Core::barf 'cos_mult_to_pow: number of args not less than 8.' if @ain > 7;
-
+    PDL::Core::barf 'cos_mult_to_pow: must be less than 8 args .' if @ain > 7;
     my $ex = 7 - @ain;
-
     my @a = ( @ain, (0) x $ex );
-
-    my (@cs) = (
+    my @cs = (
         -$a[6] + $a[4] - $a[2] + $a[0],
          -5 * $a[5] +  3 * $a[3] - $a[1],
          18 * $a[6] -  8 * $a[4] + 2 * $a[2],
@@ -2030,9 +2020,7 @@ sub cos_mult_to_pow {
         -16 * $a[5],
          32 * $a[6]
     );
-
-    pop @cs for 1 .. $ex;
-
+    splice @cs, -$ex if $ex;
     @cs;
 }
 

@@ -252,6 +252,7 @@ function. This is static data and does not depend on the instance.
 ## plot
 
     $win->plot;
+    $win->plot($pgswin); # can supply e.g. for multi-plotting
 
 Plot the samples. Uses [PDL::Graphics::Simple](https://metacpan.org/pod/PDL%3A%3AGraphics%3A%3ASimple). The
 default display type is used.
@@ -265,6 +266,7 @@ Can be called like this
 Or this
 
     $win->plot_freq({ ordinate => ORDINATE });
+    $win->plot_freq($pgswin, { ordinate => ORDINATE }); # can supply e.g. for multi-plotting
 
 Plot the frequency response (magnitude of the DFT of the window samples).
 The response is plotted in dB, and the frequency (by default) as a fraction of

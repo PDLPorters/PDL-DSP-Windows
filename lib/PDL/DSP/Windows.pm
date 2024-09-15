@@ -698,6 +698,7 @@ sub format_plot_param_vals {
 =for usage
 
     $win->plot;
+    $win->plot($pgswin); # can supply e.g. for multi-plotting
 
 =for ref
 
@@ -707,15 +708,17 @@ default display type is used.
 =cut
 
 sub plot {
-    my $self = shift;
     PDL::Core::barf 'PDL::DSP::Windows::plot PDL::Graphics::Simple not available!' unless eval { require PDL::Graphics::Simple };
-    PDL::Graphics::Simple::plot(
+    my $self = shift;
+    my $pgsw = UNIVERSAL::isa($_[0], 'PDL::Graphics::Simple') ? shift : undef;
+    my @args = (
         with => 'lines',
         $self->get_samples,
         { title  => $self->get_name . $self->format_plot_param_vals,
           xlabel => 'Time (samples)',
           ylabel => 'amplitude' },
     );
+    $pgsw ? $pgsw->plot(@args) : PDL::Graphics::Simple::plot(@args);
     return $self;
 }
 
@@ -730,6 +733,7 @@ Can be called like this
 Or this
 
     $win->plot_freq({ ordinate => ORDINATE });
+    $win->plot_freq($pgswin, { ordinate => ORDINATE }); # can supply e.g. for multi-plotting
 
 =for ref
 
@@ -765,8 +769,9 @@ my %coord2xlab = (
   bin=>'bin',
 );
 sub plot_freq {
-    my $self = shift;
     PDL::Core::barf 'PDL::DSP::Windows::plot PDL::Graphics::Simple not available!' unless eval { require PDL::Graphics::Simple };
+    my $self = shift;
+    my $pgsw = UNIVERSAL::isa($_[0], 'PDL::Graphics::Simple') ? shift : undef;
     my $opts = new PDL::Options({
         coord    => 'nyquist',
         min_bins => 1000
@@ -784,7 +789,7 @@ sub plot_freq {
       $self->{N} / 2;
     my $coordinates = PDL::Core::zeroes($mf)
         ->xlinvals( -$coordinate_range, $coordinate_range );
-    PDL::Graphics::Simple::plot(
+    my @args = (
         with => 'lines',
         $coordinates,
         20 * PDL::Ops::log10($mf),
@@ -793,6 +798,7 @@ sub plot_freq {
           xlabel => $xlab,
           ylabel => $ylab },
     );
+    $pgsw ? $pgsw->plot(@args) : PDL::Graphics::Simple::plot(@args);
     return $self;
 }
 

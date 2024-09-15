@@ -709,14 +709,12 @@ default display type is used.
 sub plot {
     my $self = shift;
     PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless eval { require PDL::Graphics::Gnuplot };
-
     PDL::Graphics::Gnuplot::plot(
         title  => $self->get_name . $self->format_plot_param_vals,
         xlabel => 'Time (samples)',
         ylabel => 'amplitude',
         $self->get_samples,
     );
-
     return $self;
 }
 
@@ -760,46 +758,31 @@ Defaults to 1000.
 
 =cut
 
+my %coord2xlab = (
+  nyquist=>'Fraction of Nyquist frequency',
+  sample=>'Fraction of sampling frequency',
+  bin=>'bin',
+);
 sub plot_freq {
     my $self = shift;
-
     PDL::Core::barf 'PDL::DSP::Windows::plot Gnuplot not available!' unless eval { require PDL::Graphics::Gnuplot };
-
     my $opts = new PDL::Options({
         coord    => 'nyquist',
         min_bins => 1000
     })->options( @_ ? shift : {} );
-
     my $mf = $self->get_modfreqs({ min_bins => $opts->{min_bins} });
     $mf /= $mf->max;
-
     my $title = $self->get_name . $self->format_plot_param_vals
         . ', frequency response. ENBW=' . sprintf( '%2.3f', $self->enbw );
-
     my $coord = $opts->{coord};
-
-    my ( $coordinate_range, $xlab );
-
-    if ($coord eq 'nyquist') {
-        $coordinate_range = 1;
-        $xlab = 'Fraction of Nyquist frequency';
-    }
-    elsif ($coord eq 'sample') {
-        $coordinate_range = 0.5;
-        $xlab = 'Fraction of sampling frequency';
-    }
-    elsif ($coord eq 'bin') {
-        $coordinate_range = $self->{N} / 2;
-        $xlab = 'bin';
-    }
-    else {
-        PDL::Core::barf "plot_freq: Unknown ordinate unit specification $coord";
-    }
-
+    my $xlab = $coord2xlab{$coord} //
+      PDL::Core::barf "plot_freq: Unknown ordinate unit specification $coord";
     my $ylab = 'frequency response (dB)';
+    my $coordinate_range = $coord eq 'nyquist' ? 1 :
+      $coord eq 'sample' ? 0.5 :
+      $self->{N} / 2;
     my $coordinates = PDL::Core::zeroes($mf)
         ->xlinvals( -$coordinate_range, $coordinate_range );
-
     PDL::Graphics::Gnuplot::plot(
         title  => $title,
         xmin   => -$coordinate_range,
@@ -810,7 +793,6 @@ sub plot_freq {
         $coordinates,
         20 * PDL::Ops::log10($mf),
     );
-
     return $self;
 }
 

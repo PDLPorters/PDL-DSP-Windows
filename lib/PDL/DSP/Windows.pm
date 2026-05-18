@@ -1161,10 +1161,10 @@ sub cosine_per {
 }
 
 sub dpss {
+    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless eval { require PDL::LinearAlgebra::Special };
     PDL::Core::barf 'dpss: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ( $N, $beta ) = @_;
 
-    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless eval { require PDL::LinearAlgebra::Special };
     PDL::Core::barf "dpss: $beta not between 0 and $N." unless $beta >= 0 and $beta <= $N;
 
     $beta /= $N / 2;
@@ -1181,11 +1181,11 @@ sub dpss {
 }
 
 sub dpss_per {
+    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless eval { require PDL::LinearAlgebra::Special };
     PDL::Core::barf 'dpss: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ( $N, $beta ) = @_;
     $N++;
 
-    PDL::Core::barf 'dpss: PDL::LinearAlgebra not installed.' unless eval { require PDL::LinearAlgebra::Special };
     PDL::Core::barf "dpss: $beta not between 0 and $N." unless $beta >= 0 and $beta <= $N;
 
     $beta /= $N / 2;
@@ -1309,10 +1309,9 @@ sub hann_poisson_per {
 }
 
 sub kaiser {
+    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless eval { require PDL::GSLSF::BESSEL };
     PDL::Core::barf 'kaiser: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ( $N, $beta ) = @_;
-
-    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless eval { require PDL::GSLSF::BESSEL };
 
     $beta *= PI;
 
@@ -1325,10 +1324,9 @@ sub kaiser {
 }
 
 sub kaiser_per {
+    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless eval { require PDL::GSLSF::BESSEL };
     PDL::Core::barf 'kaiser: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ($N,$beta) = @_;
-
-    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless eval { require PDL::GSLSF::BESSEL };
 
     $beta *= PI;
 

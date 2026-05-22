@@ -41,7 +41,7 @@ and software, some functions referred to by several different names, and some
 names refer to several different functions. As a result, the choice of window
 names is somewhat arbitrary.
 
-The ["kaiser($N,$beta)"](#kaiser-n-beta) window function requires [PDL::GSLSF::BESSEL](https://metacpan.org/pod/PDL%3A%3AGSLSF%3A%3ABESSEL). The
+The ["kaiser($N,$beta)"](#kaiser-n-beta) window function requires [PDL::GSL::SF](https://metacpan.org/pod/PDL%3A%3AGSL%3A%3ASF). The
 ["dpss($N,$beta)"](#dpss-n-beta) window function requires [PDL::LinearAlgebra](https://metacpan.org/pod/PDL%3A%3ALinearAlgebra). But the
 remaining window functions may be used if these modules are not installed.
 

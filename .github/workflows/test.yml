@@ -85,7 +85,10 @@ jobs:
         run: cpanm -n PDL::LinearAlgebra::Special
 
       - if: ${{ matrix.kaiser }}
-        run: cpanm -n PDL::GSLSF::BESSEL
+        name: Install GSL
+        uses: PDLPorters/devops/github-actions/install-dep-gsl@master
+      - if: ${{ matrix.kaiser }}
+        run: cpanm -n PDL::GSL::SF || ( cat ~/.cpanm/build.log && false )
 
       - run: perl Makefile.PL
 

@@ -224,7 +224,7 @@ and software, some functions referred to by several different names, and some
 names refer to several different functions. As a result, the choice of window
 names is somewhat arbitrary.
 
-The L</kaiser($N,$beta)> window function requires L<PDL::GSLSF::BESSEL>. The
+The L</kaiser($N,$beta)> window function requires L<PDL::GSL::SF>. The
 L</dpss($N,$beta)> window function requires L<PDL::LinearAlgebra>. But the
 remaining window functions may be used if these modules are not installed.
 
@@ -1309,31 +1309,31 @@ sub hann_poisson_per {
 }
 
 sub kaiser {
-    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless eval { require PDL::GSLSF::BESSEL };
+    PDL::Core::barf 'kaiser: PDL::GSL::SF not installed' unless eval { require PDL::GSL::SF };
     PDL::Core::barf 'kaiser: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ( $N, $beta ) = @_;
 
     $beta *= PI;
 
-    my ($n) = PDL::GSLSF::BESSEL::gsl_sf_bessel_In(
+    my ($n) = PDL::GSL::SF::gsl_sf_bessel_In(
         $beta * sqrt( 1 - PDL::Core::zeroes($N)->xlinvals( -1, 1 ) ** 2 ), 0 );
 
-    my ($d) = PDL::GSLSF::BESSEL::gsl_sf_bessel_In( $beta, 0 );
+    my ($d) = PDL::GSL::SF::gsl_sf_bessel_In( $beta, 0 );
 
     $n / $d;
 }
 
 sub kaiser_per {
-    PDL::Core::barf 'kaiser: PDL::GSLSF not installed' unless eval { require PDL::GSLSF::BESSEL };
+    PDL::Core::barf 'kaiser: PDL::GSL::SF not installed' unless eval { require PDL::GSL::SF };
     PDL::Core::barf 'kaiser: 2 arguments expected. Got ' . scalar(@_) . ' arguments.' unless @_ == 2;
     my ($N,$beta) = @_;
 
     $beta *= PI;
 
-    my ($n) = PDL::GSLSF::BESSEL::gsl_sf_bessel_In(
+    my ($n) = PDL::GSL::SF::gsl_sf_bessel_In(
         $beta * sqrt( 1 - PDL::Core::zeroes($N)->xlinvals( -1, ( -1 + 1 * ( $N - 1 ) ) / $N ) ** 2 ), 0);
 
-    my ($d) = PDL::GSLSF::BESSEL::gsl_sf_bessel_In( $beta, 0 );
+    my ($d) = PDL::GSL::SF::gsl_sf_bessel_In( $beta, 0 );
 
     $n / $d;
 }

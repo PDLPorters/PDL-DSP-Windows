@@ -41,7 +41,7 @@
       },
       "runtime" : {
          "recommends" : {
-            "PDL::GSLSF::BESSEL" : "0",
+            "PDL::GSL::SF" : "0",
             "PDL::Graphics::Simple" : "0",
             "PDL::LinearAlgebra::Special" : "0"
          },

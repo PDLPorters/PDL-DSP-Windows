@@ -1,7 +1,7 @@
 requires 'PDL' => '2.055';
 
 recommends 'PDL::LinearAlgebra::Special';
-recommends 'PDL::GSLSF::BESSEL';
+recommends 'PDL::GSL::SF';
 recommends 'PDL::Graphics::Simple';
 
 on test => sub {

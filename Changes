@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.103     2026-05-23 00:16:41 BST
+
 - fix plot_freq trying to plot infinite values in Bartlett demo
 
 0.102     2024-09-15 20:45:44 BST

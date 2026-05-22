@@ -84,7 +84,10 @@ jobs:
         run: cpanm -n Devel::Cover::Report::Coveralls
 
       - if: ${{ matrix.dpss }}
-        run: cpanm -n PDL::LinearAlgebra::Special
+        name: Install LAPACK
+        uses: PDLPorters/devops/github-actions/install-dep-lapack@master
+      - if: ${{ matrix.dpss }}
+        run: cpanm -n PDL::LinearAlgebra::Special || ( cat ~/.cpanm/build.log && false )
 
       - if: ${{ matrix.kaiser }}
         name: Install GSL

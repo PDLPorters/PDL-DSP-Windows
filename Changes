@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+- fix plot_freq trying to plot infinite values in Bartlett demo
+
 0.102     2024-09-15 20:45:44 BST
 
 - list_windows now returns a list, not print to selected filehandle

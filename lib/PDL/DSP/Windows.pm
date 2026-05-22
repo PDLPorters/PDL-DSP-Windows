@@ -787,7 +787,7 @@ sub plot_freq {
     my @args = (
         with => 'lines',
         $coordinates,
-        20 * PDL::Ops::log10($mf),
+        (20 * $mf->log10)->setinftobad,
         { title  => $title,
           xrange => [-$coordinate_range,$coordinate_range],
           xlabel => $xlab,

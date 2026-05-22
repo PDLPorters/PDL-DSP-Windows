@@ -726,12 +726,7 @@ sub plot {
 
 =for usage
 
-Can be called like this
-
     $win->plot_freq;
-
-Or this
-
     $win->plot_freq({ ordinate => ORDINATE });
     $win->plot_freq($pgswin, { ordinate => ORDINATE }); # can supply e.g. for multi-plotting
 
